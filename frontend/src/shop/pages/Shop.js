@@ -7,56 +7,47 @@ import ProductsList from "../components/ProductsList";
 
 export default class Shop extends Component {
 
-    constructor(props) {
-
-		super(props);
-
-		this.state = {
-            selectedCategoryId: null,
-            products: [],
-            categories: [],
-		};
-	}
+    state = {
+        selectedCategoryId: null,
+        products: [],
+        categories: [],
+        allProducts: []
+    };
 
     componentDidMount() {
 
         axios.get('http://localhost:5000/api/category/')
-        .then(res => {
-            console.log(res)
-            this.setState({
-                categories: res.data,
-                selectedCategoryId: this.state.categories[0],
-            });
-            console.log(this.state.selectedCategoryId);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-
-		axios.get('http://localhost:5000/api/product/')
-			.then(res => {
-                console.log(res)
+            .then(res => {
                 this.setState({
-                    products: res.data,
+                    categories: res.data,
+                    selectedCategoryId: this.state.categories[0],
                 });
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	}
+            })
+            .catch((error) => {
+                console.log(error);
+            })
 
-    selectCategory(category_id) {
-        console.log({category_id})
-        this.setState({
-          //selectedCategoryId: category
-        });
-      }
+        axios.get('http://localhost:5000/api/product/')
+            .then(res => {
+                this.setState({
+                    allProducts: res.data,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    selectCategory = ({ target }) => {
+        const category_id = target.value
+        const filteredProducts = this.state.allProducts.filter(p => category_id === p.category_id._id)
+        this.setState({ products: filteredProducts })
+    }
 
     render() {
-        return(
+        return (
             <div>
                 <CategoriesSelect selectCategory={this.selectCategory} categories={this.state.categories} />
-                
                 <ProductsList selectedCategoryId={this.state.selectedCategoryId} items={this.state.products} />
             </div>
         )

@@ -12,25 +12,32 @@ const CartList = props => {
         );
     }
 
-    return (
-        <table style={{width:"100%"}}>
-            <tr> 
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Amount</th>
-                <th>Total</th>
-            </tr>
 
-            {props.items.map(product => {
+
+    return (
+        <table style={{ width: "100%" }}>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {props.items.map(product => {
                     return <CartItem
+                        key={product.id}
                         id={product.id}
                         name={product.name}
                         price={product.price}
                         amount={product.amount}
                         img_path={product.img_path}
-                        />
+                    />
                 })}
+            </tbody>
         </table>
     )
 }
